@@ -31,9 +31,7 @@ function updateUserOrder(productId, action, customer) {
     .then((response) => {
       return response.json();
     })
-    .then((data) => {
-      // location.reload();
-    });
+    .then((data) => {});
 }
 
 // Cart
@@ -51,8 +49,8 @@ for (let i = 0; i < updateOderItem.length; i++) {
 }
 
 function updateUserOrderItem(productId, action) {
-  let customer = document.getElementById("customerName").value;
-  debugger;
+  const customer = document.getElementById("customerName").value;
+
   let data = {
     productId: productId,
     action: action,
@@ -96,3 +94,5 @@ document.getElementById("cart-icon").addEventListener("click", function () {
   let customerId = customerQs.options[customerQs.selectedIndex].value;
   location.href = "/cart" + "/" + customerId;
 });
+
+// Process Orders

@@ -12,6 +12,7 @@ from .decorators import unauthenticated_user, allowed_users, admin_only
 from .filters import ProductFilter
 
 import json
+import datetime
 
 
 @unauthenticated_user
@@ -94,16 +95,6 @@ def cart(request, id):
 
     items = order.orderitem_set.get_queryset().order_by('id')
 
-    paginator = Paginator(items, 5)
-    page_number = request.GET.get('page')
-
-    try:
-        items = paginator.page(page_number)
-    except PageNotAnInteger:
-        items = paginator.page(1)
-    except EmptyPage:
-        items = paginator.page(paginator.num_pages)
-
     cart_items = order.get_cart_items
     context = {"customer": customer, "customerId": customerId, 'items': items,
                'order': order, 'cartItems': cart_items}
@@ -139,8 +130,22 @@ def update_item(request):
     if orderItem.quantity <= 0:
         orderItem.delete()
 
-    return JsonResponse('success', safe=False)
+    return JsonResponse('Success', safe=False)
 
 
 def process_order(request):
+    transaction_id = datetime.datetime.now().timestamp()
+    data = json.loads(request.body)
+
+    customerQs = data['customer']
+    customer = Customer.objects.get(id=customerQs)
+    order, created = Order.objects.get_or_create(
+        customer=customer, complete=False)
+    total = float(data['total'])
+    order.transaction_id = transaction_id
+
+    if total == order.get_cart_total:
+        order.complete = True
+    order.save()
+
     return JsonResponse('Order complete!', safe=False)
