@@ -43,7 +43,6 @@ for (let i = 0; i < updateOderItem.length; i++) {
   updateOderItem[i].addEventListener("click", function () {
     let productId = this.dataset.product;
     let action = this.dataset.action;
-    debugger;
     updateUserOrderItem(productId, action);
   });
 }

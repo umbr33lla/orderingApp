@@ -7,7 +7,7 @@ from django.contrib.auth.models import Group
 from django.http import JsonResponse
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from .models import *
-from .forms import CreateUserForm
+from .forms import CreateUserForm, CreateCustomerForm
 from .decorators import unauthenticated_user, allowed_users, admin_only
 from .filters import ProductFilter
 
@@ -141,11 +141,15 @@ def process_order(request):
     customer = Customer.objects.get(id=customerQs)
     order, created = Order.objects.get_or_create(
         customer=customer, complete=False)
+
     total = float(data['total'])
     order.transaction_id = transaction_id
 
-    if total == order.get_cart_total:
+    if total == float(order.get_cart_total):
         order.complete = True
     order.save()
 
     return JsonResponse('Order complete!', safe=False)
+
+def developer(request):
+    return render(request, 'accounts/developer.html')
