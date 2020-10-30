@@ -7,7 +7,7 @@ from django.contrib.auth.models import Group
 from django.http import JsonResponse
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from .models import *
-from .forms import CreateUserForm, CreateCustomerForm
+from .forms import CreateUserForm, CreateCustomerForm, CreateProductForm
 from .decorators import unauthenticated_user, allowed_users, admin_only
 from .filters import ProductFilter
 
@@ -151,5 +151,11 @@ def process_order(request):
 
     return JsonResponse('Order complete!', safe=False)
 
+
 def developer(request):
-    return render(request, 'accounts/developer.html')
+    formCustomer = CreateCustomerForm()
+    formProduct = CreateProductForm()
+
+    context = {'formCustomer': formCustomer, formProduct: 'formProduct'}
+
+    return render(request, 'accounts/developer.html', context)

@@ -1,4 +1,5 @@
 {% extends 'accounts/main.html' %}
+{% load crispy_forms_tags %}
 {% load static %}
 {% block content %}
 <nav>
@@ -11,13 +12,18 @@
 </nav>
 <div class="tab-content p-3 bg-white" id="nav-tabContent">
     <div class="tab-pane fade show active" id="nav-product" role="tabpanel" aria-labelledby="nav-product-tab">
-        <form action="" method="POST">
+        <form action="" method="post">
             {% csrf_token %}
-            <button type="submit" class="btn btn-outline-success"><i class="fa fa-user-plus fa-fw"></i> Save</button>
+            {{formProduct}}
+            <button type="submit" class="btn btn-outline-success"><i class="fa fa-cheese fa-fw"></i> Save</button>
         </form>
     </div>
     <div class="tab-pane fade" id="nav-customer" role="tabpanel" aria-labelledby="nav-customer-tab">
-        Customer
+        <form action="" method="post">
+            {% csrf_token %}
+            {{formCustomer | crispy}}
+            <button type="submit" class="btn btn-outline-success"><i class="fa fa-user fa-fw"></i> Save</button>
+        </form>
     </div>
 </div>
 {% endblock %}
