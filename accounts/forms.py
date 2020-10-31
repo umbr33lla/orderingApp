@@ -1,7 +1,8 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from django.utils.translation import gettext_lazy as _
 
-from django.forms import ModelForm
+from django.forms import ModelForm, TextInput
 from .models import Customer, Product
 
 
@@ -20,7 +21,16 @@ class CreateCustomerForm(ModelForm):
 class CreateProductForm(ModelForm):
     class Meta:
         model = Product
-        fields = '__all__'
+        fields = ['name', 'price']
+        labels = {
+            'name': _('Product')
+        }
+        widgets = {
+            'name': TextInput(attrs={'autocomplete': 'off'})
+        }
+
+
+
 
 
 

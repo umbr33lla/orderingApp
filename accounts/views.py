@@ -64,7 +64,6 @@ def home(request):
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['admin'])
 def products(request):
-
     products = Product.objects.get_queryset().order_by('name')
     customers = Customer.objects.all()
 
@@ -152,10 +151,56 @@ def process_order(request):
     return JsonResponse('Order complete!', safe=False)
 
 
-def developer(request):
-    formCustomer = CreateCustomerForm()
+def admin_panel(request):
+    products = Product.objects.get_queryset().order_by('name')
+
+    productFilter = ProductFilter(request.GET, queryset=products)
+    products = productFilter.qs
+
+    paginator = Paginator(products, 5)
+    page_number = request.GET.get('page')
+
+    try:
+        products = paginator.page(page_number)
+    except PageNotAnInteger:
+        products = paginator.page(1)
+    except EmptyPage:
+        products = paginator.page(paginator.num_pages)
+
+    context = { 'products': products, 'productFilter': productFilter }
+
+    return render(request, 'accounts/adminpanel.html', context)
+
+
+
+def create_product_form(request):
     formProduct = CreateProductForm()
 
-    context = {'formCustomer': formCustomer, formProduct: 'formProduct'}
+    if request.method == 'POST':
+        form = CreateProductForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('admin_panel')
 
-    return render(request, 'accounts/developer.html', context)
+    context = { 'formProduct': formProduct }
+    return render(request, 'accounts/product_form.html', context)
+
+
+
+def edit_product_form(request, id):
+
+    product = Product.objects.get(id=id)
+    formProduct = CreateProductForm(instance=product) 
+
+    if request.method == 'POST':
+        form = CreateProductForm(request.POST, instance=product)
+        if form.is_valid():
+            form.save()
+            return redirect('admin_panel')
+
+    context = { 'formProduct': formProduct}
+    return render(request, 'accounts/product_form.html', context)
+
+
+
+

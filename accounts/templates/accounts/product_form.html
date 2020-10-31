@@ -1,0 +1,23 @@
+{% extends 'accounts/main.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
+
+<div class="row">
+    <div class="col-md-4">
+        <form action="" method="POST">
+            <div class="box-element mt-2">
+                {% csrf_token %}
+                {{formProduct | crispy}}
+                <div class="cart-row">
+                    <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-plus fa-fw"></i> Save</button>
+                    &emsp;
+                    <a href="{% url 'admin_panel' %}" class="btn btn-sm btn-danger"><i class="fa fa-undo-alt fa-fw"></i>
+                        Cancel</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

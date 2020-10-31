@@ -9,7 +9,10 @@ from .models import *
 
 class ProductFilter(django_filters.FilterSet):
     name = CharFilter(field_name='name',
-                      lookup_expr='icontains', label='', widget=TextInput(attrs={'placeholder': 'Search product...'}))
+                      lookup_expr='icontains', label='', 
+                      widget=TextInput(attrs={'class':'form-control-sm', 
+                      'placeholder': 'Search product...',
+                      'autocomplete': 'off'}))
 
     class Meta:
         model = Product
