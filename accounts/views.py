@@ -1,3 +1,6 @@
+
+#Django imports
+
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
@@ -6,14 +9,17 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import Group
 from django.http import JsonResponse
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.urls import resolve
+
+#Local imports
+
 from .models import *
 from .forms import CreateUserForm, CreateCustomerForm, CreateProductForm
 from .decorators import unauthenticated_user, allowed_users, admin_only
-from .filters import ProductFilter
+from .filters import ProductFilter, CustomerFilter
 
 import json
 import datetime
-
 
 @unauthenticated_user
 def registerPage(request):
@@ -151,43 +157,44 @@ def process_order(request):
     return JsonResponse('Order complete!', safe=False)
 
 
-def admin_panel(request):
+def product_form(request):
+
     products = Product.objects.get_queryset().order_by('name')
 
     productFilter = ProductFilter(request.GET, queryset=products)
     products = productFilter.qs
-
-    paginator = Paginator(products, 5)
-    page_number = request.GET.get('page')
+    
+    productPaginator = Paginator(products, 10)
+    product_page_number = request.GET.get('page')
 
     try:
-        products = paginator.page(page_number)
+        products = productPaginator.page(product_page_number)
     except PageNotAnInteger:
-        products = paginator.page(1)
+        products = productPaginator.page(1)
     except EmptyPage:
-        products = paginator.page(paginator.num_pages)
+        products = productPaginator.page(productPaginator.num_pages)
 
-    context = { 'products': products, 'productFilter': productFilter }
+    context = { 'products': products, 'productFilter': productFilter}
 
-    return render(request, 'accounts/adminpanel.html', context)
+    return render(request, 'accounts/product_template.html', context)
 
 
 
-def create_product_form(request):
+def create_product(request):
     formProduct = CreateProductForm()
 
     if request.method == 'POST':
         form = CreateProductForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('admin_panel')
+            return redirect('product_form')
 
     context = { 'formProduct': formProduct }
     return render(request, 'accounts/product_form.html', context)
 
 
 
-def edit_product_form(request, id):
+def update_product(request, id):
 
     product = Product.objects.get(id=id)
     formProduct = CreateProductForm(instance=product) 
@@ -196,10 +203,49 @@ def edit_product_form(request, id):
         form = CreateProductForm(request.POST, instance=product)
         if form.is_valid():
             form.save()
-            return redirect('admin_panel')
+            return redirect('product_form')
 
     context = { 'formProduct': formProduct}
     return render(request, 'accounts/product_form.html', context)
+
+
+
+def customer_form(request):
+     customers = Customer.objects.get_queryset().order_by('name')
+
+     customerFilter = CustomerFilter(request.GET, queryset=customers)
+
+     customers = customerFilter.qs
+
+     customerPaginator = Paginator(customers, 10)
+     customer_page_number = request.GET.get('page')
+
+     try:
+        customers = customerPaginator.page(customer_page_number)
+     except PageNotAnInteger:
+        customers = customerPaginator.page(1)
+     except EmptyPage:
+        customers = customerPaginator.page(customerPaginator.num_pages)
+
+     context = { 'customers': customers, 'customerFilter': customerFilter}
+
+     return render(request, 'accounts/customer_template.html', context)
+
+
+def create_customer(request):
+    context = { }
+    return render(request, 'accounts/customer_form.html', context)
+
+
+def update_customer(request, id):
+    context = { }
+    return render(request, 'accounts/customer_form.html', context)
+
+
+
+
+
+
 
 
 

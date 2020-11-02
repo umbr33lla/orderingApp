@@ -1,4 +1,3 @@
-from django.forms import widgets
 from django.forms.widgets import TextInput
 import django_filters
 
@@ -16,4 +15,16 @@ class ProductFilter(django_filters.FilterSet):
 
     class Meta:
         model = Product
+        fields = ['name']
+
+
+class CustomerFilter(django_filters.FilterSet):
+    name = CharFilter(field_name='name',
+                      lookup_expr='icontains',label='',
+                      widget=TextInput(attrs={'class':'form-control-sm',
+                      'placeholder':'Search customer...',
+                      'autocomplete': 'off'}))
+
+    class Meta:
+        model = Customer
         fields = ['name']

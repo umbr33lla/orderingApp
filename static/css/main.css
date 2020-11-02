@@ -103,5 +103,29 @@ h6 {
 }
 
 .asteriskField {
-    display: none;
+  display: none;
+}
+
+.sidebar-dark .nav-item.activeMenu .nav-link i {
+  font-weight: bold;
+  color: #fff;
+}
+
+.nav-tabs .nav-item.show .nav-link,
+.nav-tabs .nav-link.active {
+  font-weight: bold;
+}
+
+.activeMenu {
+  font-weight: bold;
+  background-color: #e9bd4d;
+}
+
+.sidebar-dark .nav-item.parentMenu .nav-link {
+  font-weight: bold;
+  color: #fff;
+}
+
+.sidebar-dark .nav-item.parentMenu .nav-link i {
+  color: #fff !important;
 }

@@ -9,7 +9,7 @@
   <meta name="description" content="" />
   <meta name="author" content="" />
 
-  <title>OS</title>
+  <title>os-x </title>
 
   <!-- Custom fonts for this template-->
 
@@ -38,29 +38,46 @@
       </a>
 
       {% if request.user.is_staff %}
+      {% with url_name=request.resolver_match.url_name %}
+
       <!-- Dashboard -->
 
-      <li class="nav-item active">
-        <a class="nav-link" href="{% url 'home' %}">
+      <li class="nav-item {% if url_name == 'home' %}activeMenu{% endif %}">
+        <a class="nav-link {% if url_name == 'home' %}text-white{% endif %}" href="{% url 'home' %}">
           <i class="fas fa-fw fa-tachometer-alt"></i>
           <span>Dashboard</span></a>
       </li>
 
-      <!-- Queries -->
+      <!--Products-->
 
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'product' %}">
-          <i class="fas fa-fw fa-cookie-bite"></i>
+      <li class="nav-item {% if url_name == 'product' %}activeMenu{% endif %}">
+        <a class="nav-link {% if url_name == 'product' %}text-white{% endif %}" href="{% url 'product' %}">
+          <i class="fas fa-fw fa-hamburger"></i>
           <span>Products</span></a>
       </li>
 
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'admin_panel' %}">
-          <i class="fas fa-fw fa-code"></i>
-          <span>Administrator</span></a>
+      <!--Administrator-->
+
+      <li class="nav-item {% if url_name == 'product_form' %}parentMenu{% endif %}">
+        <a class=" nav-link" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true"
+          aria-controls="collapseTwo">
+          <i class="fas fa-fw fa-user-cog"></i>
+          <span>Administrator</span>
+        </a>
+        <div id="collapseTwo" class="collapse {% if url_name == 'product_form' %}show{% endif %}"
+          aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <a class="collapse-item {% if url_name == 'product_form' %}active{% endif %}"
+              href="{% url 'product_form' %}">Product</a>
+            <a class="collapse-item" href="{% url 'customer_form' %}">Customer</a>
+          </div>
+        </div>
       </li>
 
+      {% endwith %}
       {% endif %}
+
+      <hr class="sidebar-divider d-none d-md-block">
 
       <!-- Sidebar Toggler (Sidebar) -->
       <div class="text-center d-none d-md-inline">

@@ -1,0 +1,73 @@
+{% extends 'accounts/main.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
+
+<div class="box-element">
+
+    <div class="row">
+        <div class="col-6">
+            <form class="form-inline" action="" method="GET">
+                {{ customerFilter.form | crispy }}
+                <button type="submit" class="btn btn-info btn-sm ml-2">Search</button>
+            </form>
+        </div>
+        <div class="col-6">
+            <a href="{% url 'create_customer' %}" class="btn btn-info btn-sm float-right"><i
+                    class="fa fa-plus fa-fw"></i>
+                New Customer</a>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="box-element mt-2">
+    <div class="cart-row">
+        <div style="flex: 2"><strong>Customer</strong></div>
+        <div style="flex: 1"><strong>Phone</strong></div>
+        <div style="flex: 1"></div>
+    </div>
+
+    {% for customer in customers %}
+    <div class="cart-row">
+        <div style="flex: 2">{{customer.name | title}}</div>
+        <div style="flex: 1">{{customer.phone}}</div>
+        <div style="flex: 1">
+            <a href="{% url 'update_customer' customer.id %}"
+                class="btn btn-circle btn-outline-secondary add-btn btn-sm"><i class="fa fa-pen"></i></a>
+        </div>
+    </div>
+    {% endfor %}
+
+    {% if customers.has_other_pages %}
+    <ul class="pagination pagination-sm">
+        {% if customers.has_previous %}
+        <li class="page-item"><a class="page-link" href="?page={{ customers.previous_page_number }}">&laquo;</a></li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" href="#"><span>&laquo;</span></a>
+        </li>
+        {% endif %}
+        {% for i in customers.paginator.page_range %}
+        {% if customers.number == i %}
+        <li class="active page-item">
+            <a class="page-link" href="#">{{ i }}<span class="sr-only">(current)</span></a>
+        </li>
+        {% else %}
+        <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+        {% endif %}
+        {% endfor %}
+        {% if customers.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ customers.next_page_number }}">&raquo;</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" href="#"><span>&raquo;</span></a>
+        </li>
+        {% endif %}
+    </ul>
+    {% endif %}
+</div>
+
+
+{% endblock %}

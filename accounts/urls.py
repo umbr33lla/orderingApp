@@ -15,7 +15,13 @@ urlpatterns = [
 
     # Product Form
 
-    path('admin_panel/', views.admin_panel, name="admin_panel"),
-    path('create_product_form/', views.create_product_form, name="create_product_form"),
-    path('edit_product_form/<int:id>/', views.edit_product_form, name="edit_product_form")
+    path('product_form/', views.product_form, name="product_form"),
+    path('create_product/', views.create_product, name="create_product"),
+    path('update_product/<int:id>/', views.update_product, name="update_product"),
+
+    # Customer Form
+
+    path('customer_form/', views.customer_form, name="customer_form"),
+    path('create_customer/', views.create_customer, name="create_customer"),
+    path('update_customer/<int:id>/', views.update_customer, name="update_customer"),
 ]
