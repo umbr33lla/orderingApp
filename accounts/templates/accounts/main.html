@@ -53,23 +53,25 @@
       <li class="nav-item {% if url_name == 'product' %}activeMenu{% endif %}">
         <a class="nav-link {% if url_name == 'product' %}text-white{% endif %}" href="{% url 'product' %}">
           <i class="fas fa-fw fa-hamburger"></i>
-          <span>Products</span></a>
+          <span>Orders</span></a>
       </li>
 
       <!--Administrator-->
 
-      <li class="nav-item {% if url_name == 'product_form' %}parentMenu{% endif %}">
+      <li class="nav-item {% if url_name == 'product_form' or url_name == 'customer_form' %}parentMenu{% endif %}">
         <a class=" nav-link" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true"
           aria-controls="collapseTwo">
           <i class="fas fa-fw fa-user-cog"></i>
           <span>Administrator</span>
         </a>
-        <div id="collapseTwo" class="collapse {% if url_name == 'product_form' %}show{% endif %}"
+        <div id="collapseTwo"
+          class="collapse {% if url_name == 'product_form' or url_name == 'customer_form' %}show{% endif %}"
           aria-labelledby="headingTwo" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <a class="collapse-item {% if url_name == 'product_form' %}active{% endif %}"
               href="{% url 'product_form' %}">Product</a>
-            <a class="collapse-item" href="{% url 'customer_form' %}">Customer</a>
+            <a class="collapse-item {% if url_name == 'customer_form' %}active{% endif %}"
+              href="{% url 'customer_form' %}">Customer</a>
           </div>
         </div>
       </li>
@@ -122,16 +124,23 @@
               </div>
             </li>
 
-            <!-- Nav Item - Alerts -->
+            <!-- Shoping Cart-->
             {% if request.user.is_staff %}
+            {% with url_name=request.resolver_match.url_name %}
+
+            {% if url_name == 'product' %}
+
             <li class="nav-item dropdown no-arrow mx-1">
               <a class="nav-link dropdown-togglem" href="#">
                 <i class="fas fa fa-shopping-cart" id="cart-icon"></i>
-                <!-- Counter - Alerts -->
-                <!-- <span class="badge badge-danger badge-counter" id="cart-total">1</span> -->
               </a>
             </li>
+
             {% endif %}
+
+            {% endwith %}
+            {% endif %}
+
             <div class="topbar-divider d-none d-sm-block"></div>
 
             <!-- Nav Item - User Information -->
@@ -139,7 +148,7 @@
               <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="false">
                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">Hello,
-                  {{request.user.get_full_name|capfirst}}</span>
+                  {{request.user.username|capfirst}}</span>
                 <img class="img-profile rounded-circle" src="{% static 'images/user.jpg' %}" />
               </a>
               <!-- Dropdown - User Information -->
@@ -170,7 +179,10 @@
 
         <!-- Begin Page Content -->
 
-        <div class="container-fluid">{% block content %} {% endblock %}</div>
+        <div class="container-fluid">
+          {% include 'common/messages.html' %}
+          {% block content %} {% endblock %}
+        </div>
 
         <!-- /.container-fluid -->
       </div>
@@ -233,3 +245,11 @@
 </body>
 
 </html>
+
+<script>
+  setTimeout(function () {
+    if ($("#message").length > 0) {
+      $("#message").remove();
+    }
+  }, 3000)
+</script>

@@ -2,6 +2,7 @@
 {% block content %}
 <div class="row">
   <div class="col-md-12">
+
     <div class="card-body">
       <div class="form-group">
         <label>Select a customer</label>
@@ -13,7 +14,6 @@
           {% endfor %}
         </select>
       </div>
-
       <div class="box-element mb-2">
         <div style="display: flex;">
           <form class="form-inline" action="" method="GET">
@@ -72,4 +72,13 @@
     </div>
   </div>
 </div>
+
+<script type="text/javascript">
+  document.getElementById("cart-icon").addEventListener("click", function () {
+    let customerQs = document.getElementById("customers");
+    let customerId = customerQs.options[customerQs.selectedIndex].value;
+    location.href = "/cart" + "/" + customerId;
+  });
+</script>
+
 {% endblock %}

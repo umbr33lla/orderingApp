@@ -64,7 +64,19 @@ def logoutUser(request):
 @login_required(login_url='login')
 @admin_only
 def home(request):
-    return render(request, 'accounts/dashboard.html')
+
+    totalProducts = Product.objects.all().count()
+    totalCustomers = Customer.objects.all().count()
+    totalCompletedOrders = Order.objects.filter(complete__iexact=True).count()
+    totalInompletedOrders = Order.objects.filter(complete__iexact=False).count()
+
+    context = {
+        'totalProducts': totalProducts, 
+        'totalCustomers': totalCustomers, 
+        'totalCompletedOrders': totalCompletedOrders,
+        'totalInompletedOrders': totalInompletedOrders}
+
+    return render(request, 'accounts/dashboard.html', context)
 
 
 @login_required(login_url='login')
@@ -76,7 +88,7 @@ def products(request):
     productFilter = ProductFilter(request.GET, queryset=products)
     products = productFilter.qs
 
-    paginator = Paginator(products, 5)
+    paginator = Paginator(products, 10)
     page_number = request.GET.get('page')
 
     try:
@@ -187,6 +199,7 @@ def create_product(request):
         form = CreateProductForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Successfully saved!')
             return redirect('product_form')
 
     context = { 'formProduct': formProduct }
@@ -199,10 +212,12 @@ def update_product(request, id):
     product = Product.objects.get(id=id)
     formProduct = CreateProductForm(instance=product) 
 
+
     if request.method == 'POST':
         form = CreateProductForm(request.POST, instance=product)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Successfully updated!')
             return redirect('product_form')
 
     context = { 'formProduct': formProduct}
@@ -232,13 +247,20 @@ def customer_form(request):
      return render(request, 'accounts/customer_template.html', context)
 
 
-def create_customer(request):
-    context = { }
-    return render(request, 'accounts/customer_form.html', context)
-
 
 def update_customer(request, id):
-    context = { }
+
+    customer = Customer.objects.get(id=id)
+    formCustomer = CreateCustomerForm(instance=customer) 
+
+    if request.method == 'POST':
+        form = CreateCustomerForm(request.POST, instance=customer)
+        if form.is_valid():
+            form.save()
+            return redirect('customer_form')
+
+    context = { 'formCustomer': formCustomer}
+
     return render(request, 'accounts/customer_form.html', context)
 
 

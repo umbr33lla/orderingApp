@@ -22,6 +22,5 @@ urlpatterns = [
     # Customer Form
 
     path('customer_form/', views.customer_form, name="customer_form"),
-    path('create_customer/', views.create_customer, name="create_customer"),
     path('update_customer/<int:id>/', views.update_customer, name="update_customer"),
 ]

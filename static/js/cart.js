@@ -88,10 +88,4 @@ function getCookie(name) {
   return cookieValue;
 }
 
-document.getElementById("cart-icon").addEventListener("click", function () {
-  let customerQs = document.getElementById("customers");
-  let customerId = customerQs.options[customerQs.selectedIndex].value;
-  location.href = "/cart" + "/" + customerId;
-});
-
 // Process Orders

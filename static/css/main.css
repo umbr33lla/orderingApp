@@ -129,3 +129,12 @@ h6 {
 .sidebar-dark .nav-item.parentMenu .nav-link i {
   color: #fff !important;
 }
+
+.sidebar .nav-item .collapse .collapse-inner .collapse-item.active,
+.sidebar .nav-item .collapsing .collapse-inner .collapse-item.active {
+  color: #36b9cc !important;
+}
+
+.alert {
+  padding: 0.35rem 1.25rem !important;
+}
